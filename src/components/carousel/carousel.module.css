@@ -1,0 +1,91 @@
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; /* Adjust as needed */
+  margin: auto;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.carousel {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+}
+
+.card {
+  min-width: 100%;
+  transition: opacity 0.5s ease-in-out;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.cardImage {
+  width: 100%;
+  height: 400px; /* Adjust height as needed */
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.cardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 16px;
+  border-radius: 0 0 20px 20px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.cardContent:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.description {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.indicatorContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: background-color 0.3s ease;
+}
+
+.activeIndicator {
+  background-color: white;
+}
+
+.hidden {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.active {
+  opacity: 1;
+  position: relative;
+}
