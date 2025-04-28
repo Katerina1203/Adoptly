@@ -5,7 +5,7 @@ import { connectDB } from "./utils"
 import path from "path"
 import { writeFile } from "fs/promises"
 import { signIn, signOut, auth } from "@/auth"
-import { ObjectId } from "mongoose";
+import { ObjectId } from "mongodb";
 
 export const createAnimalPost = async (formData: FormData) => {
 	try {
@@ -52,7 +52,14 @@ export const createAnimalPost = async (formData: FormData) => {
 	}
 
 }
-
+export const getAnimalById = async (id: string) => {
+	await connectDB();
+	const animal = await Animal.findOne({ _id: new ObjectId(id) });
+	return {
+	  ...animal,
+	  _id: animal._id.toString(), // Convert ObjectId to string
+	};
+  };
 export const takeAllPhotosForSingleAnimal = async (id: string) => {
 	try {
 		await connectDB();
