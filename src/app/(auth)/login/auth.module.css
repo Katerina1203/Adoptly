@@ -1,0 +1,71 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--color-bg);
+  background-image: url('/paws.svg');
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: 100px;
+}
+
+.toggleButtons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background-color: #f1f1f1;
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  color: var(--color-muted);
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+  background-color: #eee;
+}
+
+.active {
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: bold;
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  justify-content: center;
+}
+
+.formWrapper {
+  width: 100%;
+  background-color: var(--color-bg-light);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

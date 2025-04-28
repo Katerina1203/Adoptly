@@ -13,6 +13,7 @@ const Navbar = () => {
         <Link href="/about">За нас</Link>
         <Link href="/adopt">Осинови</Link>
         <Link href="/contact">Контакт</Link>
+        <Link href="/login">Регистрация</Link>
       </nav>
     </header>
   );
