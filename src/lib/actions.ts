@@ -132,7 +132,34 @@ export async function createUser(user: { username: string, email: string, passwo
 		console.error(e)
 	}
 }
+export const updateUser = async (formData: FormData) => {
+    try {
+        await connectDB();
 
+        const id = formData.get("id") as string;
+        const username = formData.get("username") as string;
+        const email = formData.get("email") as string;
+
+        if (!id || !username || !email) {
+            throw new Error("Missing required fields");
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            id,
+            { username, email },
+            { new: true } 
+        );
+
+        if (!updatedUser) {
+            throw new Error("User not found");
+        }
+
+        return updatedUser; 
+    } catch (error) {
+        console.error("Error updating user:", error);
+        throw error;
+    }
+};
 export const deleteUser = async (formData: FormData) => {
 	const { id } = Object.fromEntries(formData);
 
