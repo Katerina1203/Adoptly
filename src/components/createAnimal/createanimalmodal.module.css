@@ -1,0 +1,30 @@
+/* CreateAnimalModal.module.css */
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  border: 2px solid #000;
+  box-shadow: 24px;
+  padding-top: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 24px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.addBtn {
+  position:fixed;
+  width: 50px;
+  height: 50px;
+  right: 100px;
+  bottom: 100px;
+}

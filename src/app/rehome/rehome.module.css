@@ -1,0 +1,61 @@
+.rehomePage {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 20px auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rehomePage h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.rehomeForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.rehomeForm label {
+    font-weight: bold;
+    color: #555;
+}
+
+.rehomeForm input,
+.rehomeForm textarea,
+.rehomeForm button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rehomeForm input:focus,
+.rehomeForm textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.rehomeForm textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.rehomeForm button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.rehomeForm button:hover {
+    background-color: #0056b3;
+}

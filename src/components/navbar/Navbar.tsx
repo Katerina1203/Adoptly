@@ -1,8 +1,15 @@
-'use client';
 import Link from 'next/link';
 import styles from './navbar.module.css';
 
-const Navbar = () => {
+import { auth } from "@/auth"
+import { getUser } from "@/lib/data";
+
+const Navbar = async () => {
+  const session = await auth();
+  const dbUser = await getUser(session?.user?.email!)
+  console.log("dbUser", dbUser)
+  console.log("session", session);
+
   return (
     <header className={styles.navbar}>
       <div className={styles.logo}>
@@ -11,9 +18,13 @@ const Navbar = () => {
       <nav className={styles.navLinks}>
         <Link href="/">Начало</Link>
         <Link href="/about">За нас</Link>
-        <Link href="/adopt">Осинови</Link>
+        <Link href="/animals">Осинови</Link>
         <Link href="/contact">Контакт</Link>
-        <Link href="/login">Регистрация</Link>
+        {session ?
+          <Link href="/user">Профил</Link>
+          :
+          <Link href="/login">Регистрация</Link>
+        }
       </nav>
     </header>
   );
