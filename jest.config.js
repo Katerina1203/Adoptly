@@ -15,8 +15,10 @@ const customJestConfig = {
     '^@/app/(.*)$': '<rootDir>/src/app/$1',
     '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
     '^@/(.*)$': '<rootDir>/src/$1',
+    // Handle CSS modules
+    '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
   },
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/', '<rootDir>/playwright/'],
   transform: {
     // Use babel-jest to transpile tests with the next/babel preset
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
