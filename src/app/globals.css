@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --font-family: system-ui;
@@ -61,7 +60,6 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border;
@@ -78,20 +76,20 @@
 }
 
 body {
-  background-color: linear-gradient(45deg, rgb(252, 255, 250), rgb(248, 234, 237), rgb(242, 207, 219));;
   margin: 0;
+  padding: 0;
   color: var(--popover-foreground);
   font-family: var(--font-family);
   font-size: 1.25rem;
   line-height: 1.6;
-  padding-block: 1rem;
+  background: white;
 }
 
 h1,
 h2,
 h3,
-h4{
-  color : var(--primary-foreground)
+h4 {
+  color: var(--primary-foreground);
 }
 
 h1 {
@@ -103,9 +101,9 @@ img {
   max-width: 100%;
 }
 
-.wrapper{
+.wrapper {
   max-width: 1600px;
-  margin-inline:auto;
+  margin-inline: auto;
 }
 
 .flow {

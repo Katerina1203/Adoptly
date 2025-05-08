@@ -1,4 +1,4 @@
-import { Animal, Photo, User, Signal } from "./models"
+import { Animal, Photo, User } from "./models"
 
 import { connectDB } from "./utils"
 import { unstable_noStore as noStore } from 'next/cache'
@@ -28,16 +28,7 @@ export const getAnimals = async () => {
         return [];
     }
 };
-export const getAllSignals = async () => {
-    try {
-        await connectDB();
-        const signal = await Signal.find();
-        return signal;
-    } catch (e) {
-        console.error(e);
-        return [];
-    }
-};
+
 export const filterAnimals = async (filters: { type?: string, city?: string, gender?: string } = {}) => {
     try {
         await connectDB();

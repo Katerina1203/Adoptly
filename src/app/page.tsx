@@ -11,27 +11,25 @@ const images = [
   { src: "/girl-with-cat.jpg", alt: "Girl with Cat" },
   { src: "/family-with-dog.jpg", alt: "Family with Dog" }
 ];
-
 const Home = () => {
   return (
     <main className={styles.wrapper}>
-      <section className={styles.hero}>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>Осинови, не купувай.</h1>
-          <p className={styles.heroDescription}>
-            Подари нов живот на животно в нужда и направи света по-добро място.
-          </p>
-          <div className={styles.heroActions}>
-            <Button variant="contained" color="primary">Научи повече</Button>
-            <Button variant="outlined" color="primary">Контакт</Button>
-          </div>
+    <section className={styles.hero}>
+      <div className={styles.heroContent}>
+        <h1 className={styles.heroTitle}>Осинови, не купувай.</h1>
+        <p className={styles.heroDescription}>
+          Подари нов живот на животно в нужда и направи света по-добро място.
+        </p>
+        <div className={styles.heroActions}>
+          <Button variant="contained" color="primary">Научи повече</Button>
+          <Button variant="outlined" color="primary">Контакт</Button>
         </div>
-        <div style={{ width: "100%", maxWidth: "600px", height: "400px", position: "relative" }}>
-          <Carousel  />
-        </div>
-      </section>
-
-      <section className={styles.infoGrid}>
+      </div>
+      <div style={{ width: "100%", maxWidth: "600px", height: "400px", position: "relative" }}>
+        <Carousel  />
+      </div>
+    </section>
+    <section className={styles.infoGrid}>
         <article className={styles.infoCard}>
           <h3>Защо да осиновиш?</h3>
           <p>Осиновяването спасява животи. Дай шанс на животно без дом.</p>
@@ -59,11 +57,11 @@ const Home = () => {
           <p>След като осинови Мър, Анна откри своя най-добър приятел. Сега са неразделни.</p>
           <Button variant="contained" color="secondary">Виж още истории</Button>
         </div>
-      </section>
+        </section>
 
      
-    </main>
-  );
+</main>
+);
 };
 
 export default Home;

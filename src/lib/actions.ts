@@ -1,6 +1,6 @@
 "use server"
 import { revalidatePath } from "next/cache"
-import { User, Animal, Photo, Signal } from "./models"
+import { User, Animal, Photo } from "./models"
 import { connectDB } from "./utils"
 import path from "path"
 import { writeFile } from "fs/promises"
@@ -70,6 +70,15 @@ export const takeAllPhotosForSingleAnimal = async (id: string) => {
 		console.error("Error occurred: ", error)
 	}
 }
+export const getCleanImagePath = async (fullPath: string): Promise<string> => {
+	if (!fullPath) return '/placeholder.jpg';
+
+	const cleanedPath = fullPath
+		.replace(/^.*[\\\/]uploads[\\\/]/, '/uploads/')
+		.replace(/\\/g, '/');
+
+	return cleanedPath;
+};
 
 export const deleteAnimal = async (formData: FormData) => {
 	const { id } = Object.fromEntries(formData);
@@ -184,24 +193,5 @@ export const getSession = async () => {
 	} catch (error) {
 		console.error('Error fetching session:', error);
 		return null;
-	}
-};
-export const createSignal = async (signalName: string, description: string, latitude: number, longitude: number, userID: string) => {
-	try {
-		await connectDB()
-		const newSignal = new Signal({
-			name: signalName,
-			senderId: userID,
-			description: description,
-			location: {
-				type: "Point",
-				coordinates: [longitude, latitude]
-			}
-		})
-
-		await newSignal.save();
-		console.log('Signal saved successfully:', newSignal);
-	} catch (error) {
-		console.error('Error saving signal:', error);
 	}
 };

@@ -24,15 +24,19 @@ const formSchema = z.object({
         message: "Username must be at least 5 characters.",
     }),
     email: z.string().email().min(10, {
-        message: "email must be at least 10 characters.",
+        message: "Email must be at least 10 characters.",
     }),
     password: z.string().min(6, {
-        message: "Password must be at least 3 characters.",
+        message: "Password must be at least 6 characters.",
     }),
     confirmPassword: z.string().min(6, {
-        message: "Passwords must match"
+        message: "Confirm Password must match Password."
     }),
-})
+    phone: z.string().regex(/^\+?[0-9]{8,15}$/, {
+        message: "Моля, въведете валиден телефонен номер."
+    }),
+});
+
 
 type Props = {
     toggleForm: () => void
@@ -49,10 +53,14 @@ export default function RegisterForm({ toggleForm }: Props) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            username: "",
             email: "",
             password: "",
+            confirmPassword: "",
+            phone: "",
         },
-    })
+    });
+    
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         if (values.password !== values.confirmPassword) {
@@ -69,8 +77,10 @@ export default function RegisterForm({ toggleForm }: Props) {
                     username: values.username,
                     email: values.email,
                     password: values.password,
-                    confirmPassword: values.confirmPassword
+                    confirmPassword: values.confirmPassword,
+                    phone: values.phone
                 })
+                
             });
 
             response.status === 201 && router.push("/");
@@ -115,6 +125,23 @@ export default function RegisterForm({ toggleForm }: Props) {
                         </FormItem>
                     )}
                 />
+                <FormField
+    control={form.control}
+    name="phone"
+    render={({ field }) => (
+        <FormItem>
+            <FormLabel>Телефон</FormLabel>
+            <FormControl>
+                <Input placeholder="+359..." type="tel" {...field} />
+            </FormControl>
+            <FormDescription>
+                Моля, въведете вашия телефонен номер.
+            </FormDescription>
+            <FormMessage />
+        </FormItem>
+    )}
+/>
+
                 <FormField
                     control={form.control}
                     name="password"

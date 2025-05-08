@@ -5,6 +5,7 @@ interface IUser {
     username: string;
     email: string;
     password?: string;
+    phone?: string;
     img?: string;
     isAdmin?: boolean;
     createdAt?: Date;
@@ -37,14 +38,4 @@ interface ILocation {
     coordinates: [number, number];
 }
 
-interface ISignal {
-    _id?: ObjectId;
-    senderId: ObjectId;
-    name:string;
-    description: string;
-    location: ILocation;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
-export type { IUser, IPhoto, IAnimal, ISignal };
+export type { IUser, IPhoto, IAnimal };
