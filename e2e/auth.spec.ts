@@ -9,7 +9,7 @@ test.describe('Authentication Flows', () => {
   });
 
   test('should allow a user to register', async ({page}) => {
-    await page.getByRole('link', {name: 'Регистрация'}).click();
+    await page.getByRole('link', {name: /регистрация|профил/i}).click();
     await page.getByRole('button', {name: 'Създайте акаунт'}).click();
 
     const uniqueEmail = `test-${Date.now()}@example.com`;
@@ -25,7 +25,7 @@ test.describe('Authentication Flows', () => {
   });
 
   test('should allow a user to login', async ({page}) => {
-    await page.getByRole('link', {name: /Регистрация|Профил/i}).click();
+    await page.getByRole('link', {name: /регистрация|профил/i}).click();
 
     await page.locator('input[type="email"]').fill(USER_EMAIL);
     await page.locator('input[type="password"]').fill(USER_PASSWORD);
@@ -43,7 +43,7 @@ test.describe('Authentication Flows', () => {
   });
 
   test('should handle form validation errors', async ({page}) => {
-    await page.getByRole('link', {name: /Регистрация|Профил/i}).click();
+    await page.getByRole('link', {name: /регистрация|профил/i}).click();
     await page.getByRole('button', {name: 'Създайте акаунт'}).click();
     await page.getByRole('button', {name: 'Създай'}).click();
 
