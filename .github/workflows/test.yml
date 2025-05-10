@@ -20,13 +20,15 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install chromium
 
       - name: Run Jest tests
         run: npm test
 
       - name: Run Playwright tests
-        run: npx playwright test --pass-with-no-tests
+        run: npm run test:e2e
+        env:
+          CI: true
 
       - name: Upload Playwright test results
         if: always()
