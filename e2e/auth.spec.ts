@@ -4,7 +4,8 @@ const USER_EMAIL = 'test@example.com';
 const USER_PASSWORD = 'Test123!';
 
 test.describe('Authentication Flows', () => {
-  test.beforeEach(async ({page}) => {
+  test.beforeEach(async ({context, page}) => {
+    await context.clearCookies();
     await page.goto('/');
   });
 
