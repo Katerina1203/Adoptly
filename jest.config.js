@@ -15,7 +15,7 @@ const customJestConfig = {
     '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
   },
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/',
-    '<rootDir>/e2e/'],
+    '<rootDir>/e2e/', '<rootDir>/dist/'],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', {presets: ['next/babel']}],
   },
