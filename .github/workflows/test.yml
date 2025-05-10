@@ -27,6 +27,8 @@ jobs:
 
       - name: Run Playwright tests
         run: npm run test:e2e
+        env:
+          CI: true
 
       - name: Upload Playwright test results
         if: always()
