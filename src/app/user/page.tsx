@@ -14,6 +14,7 @@ export default async function UserPage() {
 		email: dbUser?.email!,
 		img: dbUser?.img!,
 		isAdmin: dbUser?.isAdmin,
+		phone:dbUser?.phone,
 		createdAt: dbUser?.createdAt?.toDateString(),
 		updatedAt: dbUser?.updatedAt?.toDateString(),
 	}

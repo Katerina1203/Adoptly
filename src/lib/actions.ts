@@ -133,7 +133,7 @@ export async function getUserWithCredentials(values: { email: string, password: 
 
 	}
 }
-export async function createUser(user: { username: string, email: string, password: string, img?: string, isAdmin?: boolean }) {
+export async function createUser(user: { username: string, email: string, password: string, phone: string, isAdmin?: boolean }) {
 	try {
 		await connectDB();
 		await User.create(user)

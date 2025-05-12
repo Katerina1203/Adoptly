@@ -27,7 +27,7 @@
 .title {
   font-size: 2.75rem;
   font-weight: 800;
-  color: #5b3cc4;
+  color: #5c4d7d;
   margin-bottom: 1rem;
 }
 
@@ -83,12 +83,12 @@
 
 .form input:focus,
 .form textarea:focus {
-  border-color: #5b3cc4;
+  border-color: #5c4d7d;
   outline: none;
 }
 
 .form button {
-  background: #5b3cc4;
+  background: #5c4d7d;
   color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;

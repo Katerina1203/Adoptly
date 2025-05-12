@@ -32,7 +32,7 @@ const formSchema = z.object({
     confirmPassword: z.string().min(6, {
         message: "Confirm Password must match Password."
     }),
-    phone: z.string().regex(/^\+?[0-9]{8,15}$/, {
+    phone: z.string().regex(/^\+?[0-9]{10}$/, {
         message: "Моля, въведете валиден телефонен номер."
     }),
 });

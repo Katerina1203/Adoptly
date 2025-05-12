@@ -2,7 +2,7 @@
 	--primary-color: #5c4d7d;
 	--accent-color: #ff7f50;
 	--text-color: #222;
-	--bg-color: #f9f9fb;
+	--bg-color: #ffffff;
 	--bd-rds: 16px;
   }
   
@@ -20,13 +20,15 @@
 	align-items: center;
 	gap: 2rem;
 	padding: 4rem 2rem;
-	max-width: 1200px;
+	max-width: 1280px;
 	margin: 0 auto;
   }
   
   @media (min-width: 768px) {
 	.hero {
 	  flex-direction: row;
+	  align-items: center;
+	  justify-content: space-between;
 	}
   }
   
@@ -35,34 +37,56 @@
 	display: flex;
 	flex-direction: column;
 	gap: 1.5rem;
+	text-align: center;
+  }
+  
+  @media (min-width: 768px) {
+	.heroContent {
+	  text-align: left;
+	}
   }
   
   .heroTitle {
-	font-size: 3rem;
-	font-weight: 700;
+	font-size: 3.25rem;
+	font-weight: 800;
 	color: var(--primary-color);
   }
   
   .heroDescription {
 	font-size: 1.25rem;
-	line-height: 1.75rem;
+	line-height: 1.8rem;
 	color: #555;
+	max-width: 600px;
   }
   
   .heroActions {
 	display: flex;
 	gap: 1rem;
 	flex-wrap: wrap;
+	justify-content: center;
   }
   
-  .heroImage {
-	flex: 1;
-	position: relative;
-	aspect-ratio: 4 / 3;
+  @media (min-width: 768px) {
+	.heroActions {
+	  justify-content: flex-start;
+	}
+  }
+  
+  .heroActions button {
+	background-color: var(--primary-color);
+	color: white;
+	padding: 0.75rem 1.5rem;
+	border: none;
 	border-radius: var(--bd-rds);
-	overflow: hidden;
-	max-width: 600px;
-	width: 100%;
+	font-weight: 600;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .heroActions button:hover {
+	background-color: #483e70;
+	transform: translateY(-2px);
   }
   
   .infoGrid {
@@ -70,7 +94,7 @@
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	gap: 2rem;
 	padding: 4rem 2rem;
-	max-width: 1200px;
+	max-width: 1280px;
 	margin: 0 auto;
   }
   
@@ -79,11 +103,13 @@
 	padding: 2rem;
 	border-radius: var(--bd-rds);
 	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-	transition: transform 0.3s ease;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	text-align: center;
   }
   
   .infoCard:hover {
-	transform: translateY(-4px);
+	transform: translateY(-6px);
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   }
   
   .featuredStory {
@@ -92,8 +118,10 @@
 	gap: 2rem;
 	align-items: center;
 	padding: 4rem 2rem;
-	max-width: 1200px;
+	max-width: 1280px;
 	margin: 0 auto;
+	background-color: #f5f5f5;
+	border-radius: var(--bd-rds);
   }
   
   @media (min-width: 768px) {
@@ -106,6 +134,7 @@
 	flex: 1;
 	border-radius: var(--bd-rds);
 	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
   
   .storyContent {
@@ -113,29 +142,88 @@
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	text-align: center;
   }
   
-  .callToAction {
-	text-align: center;
-	padding: 4rem 2rem;
+  @media (min-width: 768px) {
+	.storyContent {
+	  text-align: left;
+	}
+  }
+  
+  .storyContent h2 {
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--primary-color);
+  }
+  
+  .storyContent p {
+	font-size: 1.125rem;
+	color: #333;
+	line-height: 1.6;
+  }
+  
+  .storyContent button {
 	background-color: var(--primary-color);
 	color: white;
+	padding: 0.75rem 1.5rem;
+	border: none;
+	border-radius: var(--bd-rds);
+	font-weight: 600;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
   }
   
-  .callToAction h2 {
+  .storyContent button:hover {
+	background-color: #483e70;
+	transform: translateY(-2px);
+  }
+  
+  .testimonials {
+	background-color: #f9f9fb;
+	padding: 4rem 2rem;
+	text-align: center;
+	max-width: 1280px;
+	margin: 0 auto 4rem;
+	border-radius: var(--bd-rds);
+  }
+  
+  .testimonials h3 {
 	font-size: 2rem;
-	margin-bottom: 1rem;
-  }
-  
-  .callToAction p {
-	font-size: 1.125rem;
+	font-weight: 700;
+	color: var(--primary-color);
 	margin-bottom: 2rem;
   }
   
-  .button {
-	padding: 0.75rem 1.5rem;
-	border-radius: var(--bd-rds);
-	font-weight: 500;
-	text-transform: none;
+  .testimonialCards {
+	display: grid;
+	gap: 2rem;
+	grid-template-columns: 1fr;
   }
   
+  @media (min-width: 768px) {
+	.testimonialCards {
+	  grid-template-columns: repeat(3, 1fr);
+	}
+  }
+  
+  .testimonial {
+	background: white;
+	padding: 2rem;
+	border-radius: var(--bd-rds);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+	font-size: 1.05rem;
+	line-height: 1.7;
+	color: #444;
+	position: relative;
+  }
+  
+  .testimonial span {
+	display: block;
+	margin-top: 1rem;
+	font-weight: 600;
+	color: var(--primary-color);
+  }
+  
+ 
