@@ -7,8 +7,6 @@ import { getUser } from "@/lib/data";
 const Navbar = async () => {
   const session = await auth();
   const dbUser = await getUser(session?.user?.email!)
-  console.log("dbUser", dbUser)
-  console.log("session", session);
 
   return (
     <header className={styles.navbar}>

@@ -24,15 +24,11 @@ interface EditUserModalProps {
     username: string;
     email: string;
     phone?: string;
+    img?: undefined; // Ensure no File object gets passed
   };
 }
 
-const EditUserModal: React.FC<EditUserModalProps> = ({
-  isOpen,
-  onClose,
-  onSave,
-  user,
-}) => {
+const EditUserModal = ({ isOpen, onClose, onSave, user }: EditUserModalProps) => {
   const {
     register,
     handleSubmit,
@@ -46,12 +42,19 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
     },
   });
 
-  if (!isOpen) return null;
-
+  
   const onSubmit = (data: FormData) => {
-    onSave(data);
+    const newData = {
+      username: String(data.username),
+      email: String(data.email),
+      phone: String(data.phone),
+    }
+    console.log("Submitted data:", newData);
+    onSave(newData);
     onClose();
   };
+  
+  if (!isOpen) return <></>;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

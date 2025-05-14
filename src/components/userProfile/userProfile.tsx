@@ -28,7 +28,12 @@ type UserProfileProps = {
   }>;
 };
 
-export default function UserProfile(props: UserProfileProps) {
+export default async function UserProfile(props: UserProfileProps) {
+  console.log('User Profile Props:', props);
+  const { user } = await props;
+  console.log('User Profile Props:', user);
+  const data = JSON.parse(JSON.stringify(user))
+  
   return (
     <div className={`${styles.profileWrapper} fade-in`}>
       <h1 className={styles.title}>Профил на потребителя</h1>
@@ -45,25 +50,23 @@ export default function UserProfile(props: UserProfileProps) {
         </div>
 
         <div className={styles.details}>
-          <p><strong>Име:</strong> {props.user.username}</p>
-          <p><strong>Имейл:</strong> {props.user.email}</p>
-          <p><strong>Телефонен номер:</strong> {props.user.phone}</p>
-          <p><strong>Присъединил се:</strong> {props.user.createdAt}</p>
+          <p><strong>Име:</strong> {data.username}</p>
+          <p><strong>Имейл:</strong> {data.email}</p>
+          <p><strong>Телефонен номер:</strong> {data.phone}</p>
         </div>
 
         <div className={styles.buttonGroup}>
           <EditUserBtn
-            userId={props.user._id}
+            userId={String(data._id)}
             user={{
-              username: props.user.username,
-              email: props.user.email,
-              phone: props.user.phone || '',
-              img: props.user.img || '',
+              username: data.username,
+              email: data.email,
+              phone: data.phone || '',
             }}
           />
           <DeleteUserBtn
-            userId={props.user._id}
-            username={props.user.username}
+            userId={String(data._id)}
+            username={data.username}
           />
         </div>
       </div>

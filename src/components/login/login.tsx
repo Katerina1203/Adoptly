@@ -50,7 +50,6 @@ export default function LoginForm({ toggleForm }: Props) {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             const response = await getUserWithCredentials(values);
-            console.log("response", response);
 
             if (!!response.error) {
                 console.error(response.error);

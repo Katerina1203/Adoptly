@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema<IUser>({
         type: String,
         size: /^[0-9]{10}$/,
         required: true,
-        unique: true,
     },
     img: {
         type: String,

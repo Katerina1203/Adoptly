@@ -1,16 +1,16 @@
 import { ObjectId } from "mongoose";
 
 interface IUser {
-    _id?: ObjectId;
+    _id: string; 
     username: string;
     email: string;
     password?: string;
     phone?: string;
     img?: string;
     isAdmin?: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+  }
 
 interface IPhoto {
     _id?: ObjectId;

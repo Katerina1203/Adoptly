@@ -53,22 +53,22 @@ export const createAnimalPost = async (formData: FormData) => {
 
 }
 export const getAnimalById = async (id: string) => {
-	await connectDB();
-	const animal = await Animal.findOne({ _id: new ObjectId(id) });
-	return {
-	  ...animal,
-	  _id: animal._id.toString(), // Convert ObjectId to string
-	};
-  };
+    await connectDB();
+    const animal = await Animal.findOne({ _id: new ObjectId(id) });
+    // Convert Mongoose document to plain object and serialize _id
+    return {
+        ...JSON.parse(JSON.stringify(animal)),
+        _id: animal._id.toString(),
+    };
+};
 export const takeAllPhotosForSingleAnimal = async (id: string) => {
-	try {
-		await connectDB();
-		const photos = await Photo.find({ animalId: id });
-		return photos
-
-	} catch (error) {
-		console.error("Error occurred: ", error)
-	}
+    try {
+        await connectDB();
+        const photos = await Photo.find({ animalId: id });
+        return JSON.parse(JSON.stringify(photos)); 
+    } catch (error) {
+        console.error("Error occurred: ", error);
+    }
 }
 export const getCleanImagePath = async (fullPath: string): Promise<string> => {
 	if (!fullPath) return '/placeholder.jpg';
@@ -91,7 +91,6 @@ export const deleteAnimal = async (formData: FormData) => {
 		revalidatePath("/animals");
 
 	} catch (e) {
-		console.log(e);
 		return { error: "Something went wrong!" };
 	}
 }
@@ -102,22 +101,7 @@ export const handleGoogleLogin = async () => {
 }
 
 export const handleLogout = async () => {
-	// "use server";
 	await signOut({ redirectTo: "/" });
-}
-export async function getUserWithCredentialsFromForm(formData: FormData) {
-	try {
-		const response = await signIn("credentials", {
-
-			email: formData.get("email"),
-			password: formData.get("password"),
-			redirect: false,
-		});
-		return response;
-	} catch (e) {
-		console.error(e)
-
-	}
 }
 
 export async function getUserWithCredentials(values: { email: string, password: string }) {
@@ -141,29 +125,23 @@ export async function createUser(user: { username: string, email: string, passwo
 		console.error(e)
 	}
 }
-export const updateUser = async (formData: FormData) => {
+export const updateUser = async (data: any) => {
     try {
         await connectDB();
-
-        const id = formData.get("id") as string;
-        const username = formData.get("username") as string;
-        const email = formData.get("email") as string;
-
-        if (!id || !username || !email) {
-            throw new Error("Missing required fields");
-        }
-
         const updatedUser = await User.findByIdAndUpdate(
-            id,
-            { username, email },
+            data.userId,
+            {
+                username: data.username,
+                email: data.email,
+                phone: data.phone,
+            },
             { new: true } 
         );
 
         if (!updatedUser) {
             throw new Error("User not found");
         }
-
-        return updatedUser; 
+        return JSON.parse(JSON.stringify(updatedUser));
     } catch (error) {
         console.error("Error updating user:", error);
         throw error;
