@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import type  { IUser, IPhoto, IAnimal, ISignal } from "@/types/models"
+import type  { IUser, IPhoto, IAnimal } from "@/types/models"
 const userSchema = new mongoose.Schema<IUser>({
     username: {
         type: String,
@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema<IUser>({
         type: String,
         min: 8,
         max: 25,
+    },
+    phone: {
+        type: String,
+        size: /^[0-9]{10}$/,
+        required: true,
     },
     img: {
         type: String,
@@ -75,36 +80,7 @@ const animalSchema = new mongoose.Schema<IAnimal>({
 },
     { timestamps: true }
 );
-const signalSchema = new mongoose.Schema<ISignal>({
-    senderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    name:{
-        type: String,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
-    location: {
-        type: {
-            type: String,
-            enum: ['Point'],
-            required: true,
-        },
-        coordinates: {
-            type: [Number],
-            required: true,
-        },
-        },
-    },
-    { timestamps: true }
-);
 
 export const User = mongoose.models.User || mongoose.model("User", userSchema);
 export const Animal = mongoose.models.Animal || mongoose.model("Animal", animalSchema);
 export const Photo = mongoose.models.Photo || mongoose.model("Photo", photoSchema);
-export const Signal = mongoose.models.Signal || mongoose.model("Signal", signalSchema);

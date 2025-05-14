@@ -64,7 +64,7 @@ const NestedModal = ({ open, setOpen }: Props) => {
 			setAgeError(errorMessage);
 			return;
 		}
-		console.log(formData);
+		console.log("form data", formData);
 		
 		await createAnimalPost(formData);
 		handleClose();

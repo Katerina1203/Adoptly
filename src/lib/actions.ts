@@ -1,6 +1,6 @@
 "use server"
 import { revalidatePath } from "next/cache"
-import { User, Animal, Photo, Signal } from "./models"
+import { User, Animal, Photo } from "./models"
 import { connectDB } from "./utils"
 import path from "path"
 import { writeFile } from "fs/promises"
@@ -53,23 +53,32 @@ export const createAnimalPost = async (formData: FormData) => {
 
 }
 export const getAnimalById = async (id: string) => {
-	await connectDB();
-	const animal = await Animal.findOne({ _id: new ObjectId(id) });
-	return {
-	  ...animal,
-	  _id: animal._id.toString(), // Convert ObjectId to string
-	};
-  };
+    await connectDB();
+    const animal = await Animal.findOne({ _id: new ObjectId(id) });
+    // Convert Mongoose document to plain object and serialize _id
+    return {
+        ...JSON.parse(JSON.stringify(animal)),
+        _id: animal._id.toString(),
+    };
+};
 export const takeAllPhotosForSingleAnimal = async (id: string) => {
-	try {
-		await connectDB();
-		const photos = await Photo.find({ animalId: id });
-		return photos
-
-	} catch (error) {
-		console.error("Error occurred: ", error)
-	}
+    try {
+        await connectDB();
+        const photos = await Photo.find({ animalId: id });
+        return JSON.parse(JSON.stringify(photos)); 
+    } catch (error) {
+        console.error("Error occurred: ", error);
+    }
 }
+export const getCleanImagePath = async (fullPath: string): Promise<string> => {
+	if (!fullPath) return '/placeholder.jpg';
+
+	const cleanedPath = fullPath
+		.replace(/^.*[\\\/]uploads[\\\/]/, '/uploads/')
+		.replace(/\\/g, '/');
+
+	return cleanedPath;
+};
 
 export const deleteAnimal = async (formData: FormData) => {
 	const { id } = Object.fromEntries(formData);
@@ -82,7 +91,6 @@ export const deleteAnimal = async (formData: FormData) => {
 		revalidatePath("/animals");
 
 	} catch (e) {
-		console.log(e);
 		return { error: "Something went wrong!" };
 	}
 }
@@ -93,22 +101,7 @@ export const handleGoogleLogin = async () => {
 }
 
 export const handleLogout = async () => {
-	// "use server";
 	await signOut({ redirectTo: "/" });
-}
-export async function getUserWithCredentialsFromForm(formData: FormData) {
-	try {
-		const response = await signIn("credentials", {
-
-			email: formData.get("email"),
-			password: formData.get("password"),
-			redirect: false,
-		});
-		return response;
-	} catch (e) {
-		console.error(e)
-
-	}
 }
 
 export async function getUserWithCredentials(values: { email: string, password: string }) {
@@ -124,7 +117,7 @@ export async function getUserWithCredentials(values: { email: string, password: 
 
 	}
 }
-export async function createUser(user: { username: string, email: string, password: string, img?: string, isAdmin?: boolean }) {
+export async function createUser(user: { username: string, email: string, password: string, phone: string, isAdmin?: boolean }) {
 	try {
 		await connectDB();
 		await User.create(user)
@@ -132,29 +125,23 @@ export async function createUser(user: { username: string, email: string, passwo
 		console.error(e)
 	}
 }
-export const updateUser = async (formData: FormData) => {
+export const updateUser = async (data: any) => {
     try {
         await connectDB();
-
-        const id = formData.get("id") as string;
-        const username = formData.get("username") as string;
-        const email = formData.get("email") as string;
-
-        if (!id || !username || !email) {
-            throw new Error("Missing required fields");
-        }
-
         const updatedUser = await User.findByIdAndUpdate(
-            id,
-            { username, email },
+            data.userId,
+            {
+                username: data.username,
+                email: data.email,
+                phone: data.phone,
+            },
             { new: true } 
         );
 
         if (!updatedUser) {
             throw new Error("User not found");
         }
-
-        return updatedUser; 
+        return JSON.parse(JSON.stringify(updatedUser));
     } catch (error) {
         console.error("Error updating user:", error);
         throw error;
@@ -184,24 +171,5 @@ export const getSession = async () => {
 	} catch (error) {
 		console.error('Error fetching session:', error);
 		return null;
-	}
-};
-export const createSignal = async (signalName: string, description: string, latitude: number, longitude: number, userID: string) => {
-	try {
-		await connectDB()
-		const newSignal = new Signal({
-			name: signalName,
-			senderId: userID,
-			description: description,
-			location: {
-				type: "Point",
-				coordinates: [longitude, latitude]
-			}
-		})
-
-		await newSignal.save();
-		console.log('Signal saved successfully:', newSignal);
-	} catch (error) {
-		console.error('Error saving signal:', error);
 	}
 };
