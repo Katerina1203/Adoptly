@@ -5,7 +5,7 @@ import { takeAllPhotosForSingleAnimal, deleteAnimal } from "@/lib/actions";
 import ImagesPreview from './imagesPreview';
 import { auth } from "@/auth";
 import DeleteAnimal from "@/components/deleteAnimal/DeleteAnimal";
-
+import EditAnimalButton from "@/components/editAnimal/EditAnimalButton";
 type Params = {
     id: string;
 };
@@ -91,11 +91,16 @@ const SingleAnimal = async ({ id }: Params) => {
 
                 {isOwner && (
                     <div className="flex gap-4 mt-6">
-                        <Link href={`/edit-animal/${animal._id}`}>
-                            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                Редактирай
-                            </button>
-                        </Link>
+
+    <EditAnimalButton animal={{
+      _id: animal._id.toString(),
+      description: animal.description,
+      type: animal.type,
+      age: animal.age,
+      city: animal.city,
+      gender: animal.gender,
+    }} />
+
                         <DeleteAnimal animalId={animal._id.toString()} deleteAction={deleteAnimal} />
                     </div>
                 )}
