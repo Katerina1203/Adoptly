@@ -6,6 +6,7 @@ import path from "path"
 import { writeFile } from "fs/promises"
 import { signIn, signOut, auth } from "@/auth"
 import { ObjectId } from "mongodb";
+import { redirect } from "next/navigation"
 
 export const createAnimalPost = async (formData: FormData) => {
 	try {
@@ -55,7 +56,6 @@ export const createAnimalPost = async (formData: FormData) => {
 export const getAnimalById = async (id: string) => {
     await connectDB();
     const animal = await Animal.findOne({ _id: new ObjectId(id) });
-    // Convert Mongoose document to plain object and serialize _id
     return {
         ...JSON.parse(JSON.stringify(animal)),
         _id: animal._id.toString(),
@@ -82,18 +82,72 @@ export const getCleanImagePath = async (fullPath: string): Promise<string> => {
 
 export const deleteAnimal = async (formData: FormData) => {
 	const { id } = Object.fromEntries(formData);
+	await connectDB();
 
-	try {
-		connectDB();
+	const session = await auth();
+	if (!session?.user?.email) throw new Error("Unauthorized");
 
-		await Animal.findByIdAndDelete(id);
-		console.log("deleted from db");
-		revalidatePath("/animals");
+	const dbUser = await User.findOne({ email: session.user.email });
+	if (!dbUser) throw new Error("User not found");
 
-	} catch (e) {
-		return { error: "Something went wrong!" };
+	const animal = await Animal.findById(id);
+	if (!animal) throw new Error("Animal not found");
+
+	if (animal.userID.toString() !== dbUser._id.toString()) {
+		throw new Error("Not authorized");
 	}
-}
+
+	await Animal.findByIdAndDelete(id);
+	await Photo.deleteMany({ animalId: id }); 
+
+	revalidatePath("/animals");
+	redirect("/animals"); 
+};
+export const updateAnimal = async (data: {
+	id: string;
+	description: string;
+	type: string;
+	age: string;
+	city: string;
+	gender: string;
+}) => {
+	try {
+		await connectDB();
+
+		const session = await auth();
+		if (!session?.user?.email) throw new Error("Unauthorized");
+
+		const user = await User.findOne({ email: session.user.email });
+		if (!user) throw new Error("User not found");
+
+		const animal = await Animal.findById(data.id);
+		if (!animal) throw new Error("Animal not found");
+
+		if (animal.userID.toString() !== user._id.toString()) {
+			throw new Error("Not authorized to edit this ad");
+		}
+
+		const updatedAnimal = await Animal.findByIdAndUpdate(
+			data.id,
+			{
+				description: data.description,
+				type: data.type,
+				age: data.age,
+				city: data.city,
+				gender: data.gender,
+			},
+			{ new: true }
+		);
+
+		if (!updatedAnimal) throw new Error("Failed to update animal");
+
+		revalidatePath(`/animals/${data.id}`);
+		return JSON.parse(JSON.stringify(updatedAnimal));
+	} catch (error) {
+		console.error("Error updating animal:", error);
+		throw error;
+	}
+};
 //users
 export const handleGoogleLogin = async () => {
 	"use server";

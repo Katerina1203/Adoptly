@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getAnimalAd, getUserById } from "@/lib/data";
-import { takeAllPhotosForSingleAnimal } from "@/lib/actions";
+import { getAnimalAd, getUserById, getUser } from "@/lib/data";
+import { takeAllPhotosForSingleAnimal, deleteAnimal } from "@/lib/actions";
 import ImagesPreview from './imagesPreview';
+import { auth } from "@/auth";
+import DeleteAnimal from "@/components/deleteAnimal/DeleteAnimal";
 
 type Params = {
     id: string;
@@ -11,6 +13,7 @@ type Params = {
 const SingleAnimal = async ({ id }: Params) => {
     const animal = await getAnimalAd(id);
     const photos = await takeAllPhotosForSingleAnimal(id);
+    const session = await auth();
 
     if (!animal) {
         console.error("Animal not found", id);
@@ -18,12 +21,15 @@ const SingleAnimal = async ({ id }: Params) => {
     }
 
     const user = await getUserById(animal.userID);
+    const currentUser = session?.user?.email ? await getUser(session.user.email) : null;
+    const isOwner = currentUser?._id?.toString() === animal.userID.toString();
 
     const serializedUser = user
         ? {
               _id: user._id?.toString() || '',
               username: user.username,
               img: user.img || '/default-profile.png',
+              phone: user.phone || '',
           }
         : null;
 
@@ -32,7 +38,6 @@ const SingleAnimal = async ({ id }: Params) => {
         return <div>User not found.</div>;
     }
 
-    // ✅ Serialize photo paths (remove local paths, convert to public-relative)
     const serializedPhotos = (photos || []).map((photo) => ({
         _id: photo._id.toString?.() || '',
         src: photo.src.replace(/^.*[\\\/]uploads[\\\/]/, '/uploads/').replace(/\\/g, '/'),
@@ -56,9 +61,10 @@ const SingleAnimal = async ({ id }: Params) => {
                         <div>локация: {animal.city}</div>
                     </div>
                     <div>
-                         {new Date(animal.createdAt).toLocaleString()}
+                        {new Date(animal.createdAt).toLocaleString()}
                     </div>
                 </div>
+
                 <Link href={`/user/${serializedUser._id}`}>
                     <div className="flex items-center gap-4 cursor-pointer">
                         <Image
@@ -69,18 +75,30 @@ const SingleAnimal = async ({ id }: Params) => {
                             height={60}
                         />
                         <p>{serializedUser.username}</p>
+                        <p>{serializedUser.phone}</p>
                     </div>
                 </Link>
 
                 <div className="mt-4 text-base leading-6">
-    <div className="font-bold text-lg mb-2">Допълнителна информация</div>
-    <div
-        className="whitespace-pre-wrap break-words max-h-40 overflow-y-auto p-2 border border-gray-300 rounded"
-        style={{ wordWrap: "break-word" }}
-    >
-        {animal.description}
-    </div>
-</div>
+                    <div className="font-bold text-lg mb-2">Допълнителна информация</div>
+                    <div
+                        className="whitespace-pre-wrap break-words max-h-40 overflow-y-auto p-2 border border-gray-300 rounded"
+                        style={{ wordWrap: "break-word" }}
+                    >
+                        {animal.description}
+                    </div>
+                </div>
+
+                {isOwner && (
+                    <div className="flex gap-4 mt-6">
+                        <Link href={`/edit-animal/${animal._id}`}>
+                            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                                Редактирай
+                            </button>
+                        </Link>
+                        <DeleteAnimal animalId={animal._id.toString()} deleteAction={deleteAnimal} />
+                    </div>
+                )}
             </div>
         </div>
     );
