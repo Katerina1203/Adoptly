@@ -13,7 +13,7 @@ export default function CreateAnimalBtn() {
         <>
             <div>
                 <button onClick={handleOpenModal}>
-                    <CirclePlus className="fixed w-14 h-14 right-2 bottom-2" />
+                    <CirclePlus data-testid="create-post-btn" className="fixed w-14 h-14 right-2 bottom-2" />
                 </button>
                 <CreateAnimalModal open={open} setOpen={setOpen} />
             </div>
