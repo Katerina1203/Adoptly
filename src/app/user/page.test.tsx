@@ -31,11 +31,15 @@ describe('UserPage Component', () => {
   it('should redirect to login if user is not found', async () => {
     (auth as jest.Mock).mockResolvedValue({user: {email: 'test@example.com'}});
     (getUser as jest.Mock).mockResolvedValue(null);
-    (getAnimalsByUserId as jest.Mock).mockResolvedValue([]);
 
-    await UserPage();
+    const mockRedirect = redirect as jest.Mock;
 
-    expect(redirect).toHaveBeenCalledWith('/login');
+    try {
+      await UserPage();
+      fail('Expected an error but none was thrown');
+    } catch (error) {
+      expect(mockRedirect).toHaveBeenCalledWith('/login');
+    }
   });
 
   it('should render UserProfile when user exists', async () => {

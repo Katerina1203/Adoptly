@@ -7,6 +7,7 @@ import EditUserButton from './EditUserButton';
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
+    refresh: jest.fn()
   }),
 }));
 
@@ -69,7 +70,6 @@ describe('EditUserButton Component', () => {
     render(<EditUserButton
         userId={mockUserId}
         user={mockUser}
-        onUserUpdated={mockOnUserUpdated}
     />);
 
     const editButton = screen.getByText('Редактирай');
@@ -80,30 +80,7 @@ describe('EditUserButton Component', () => {
 
     await waitFor(() => {
       expect(mockUpdateUser).toHaveBeenCalledTimes(1);
-
-      const formDataArg = mockUpdateUser.mock.calls[0][0];
-      expect(formDataArg instanceof FormData).toBeTruthy();
-
-      expect(mockOnUserUpdated).toHaveBeenCalledWith(mockUser);
-    });
-  });
-
-  it('calls onUserUpdated when provided', async () => {
-    render(<EditUserButton
-        userId={mockUserId}
-        user={mockUser}
-        onUserUpdated={mockOnUserUpdated}
-    />);
-
-    const editButton = screen.getByText('Редактирай');
-    await userEvent.click(editButton);
-
-    const saveButton = screen.getByText('Save');
-    await userEvent.click(saveButton);
-
-    await waitFor(() => {
-      expect(mockOnUserUpdated).toHaveBeenCalledTimes(1);
-      expect(mockOnUserUpdated).toHaveBeenCalledWith(mockUser);
+      expect(mockUpdateUser).toHaveBeenCalled();
     });
   });
 

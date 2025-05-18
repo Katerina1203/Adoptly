@@ -1,7 +1,17 @@
 import mongoose from 'mongoose';
 import {MongoMemoryServer} from 'mongodb-memory-server';
-import {changeUser, getAllUsers, getUser, getUserById} from './data';
-import {User} from './models';
+import {
+  changeUser,
+  createAnimal,
+  filterAnimals,
+  getAllUsers,
+  getAnimalAd,
+  getAnimals,
+  getAnimalsByUserId,
+  getUser,
+  getUserById
+} from './data';
+import {Animal, User} from './models';
 import bcrypt from 'bcryptjs';
 import {connectDB} from './utils';
 
@@ -37,7 +47,8 @@ describe('User-related methods', () => {
         username: 'testuser',
         email: 'test@example.com',
         password: 'password123',
-        isAdmin: false
+        isAdmin: false,
+        phone: '1234567890'
       };
       await User.create(mockUser);
 
@@ -73,7 +84,8 @@ describe('User-related methods', () => {
         username: 'testuser',
         email: 'test@example.com',
         password: 'password123',
-        isAdmin: false
+        isAdmin: false,
+        phone: '1234567890'
       });
 
       const result = await getUserById(mockUser._id.toString());
@@ -110,13 +122,15 @@ describe('User-related methods', () => {
           username: 'user1',
           email: 'user1@example.com',
           password: 'password123',
-          isAdmin: false
+          isAdmin: false,
+          phone: '1234567890'
         },
         {
           username: 'user2',
           email: 'user2@example.com',
           password: 'password456',
-          isAdmin: true
+          isAdmin: true,
+          phone: '0987654321'
         }
       ]);
 
@@ -154,14 +168,16 @@ describe('User-related methods', () => {
         username: 'olduser',
         email: 'old@example.com',
         password: 'oldpassword',
-        isAdmin: false
+        isAdmin: false,
+        phone: '1234567890'
       });
 
       const updates = {
-        name: 'newuser',
+        username: 'newuser',
         email: 'new@example.com',
         password: 'newpassword',
-        img: 'profile.jpg'
+        img: 'profile.jpg',
+        phone: '0987654321'
       };
 
       const result = await changeUser(user._id.toString(), updates);
@@ -175,10 +191,11 @@ describe('User-related methods', () => {
 
     it('should return error when user ID is invalid', async () => {
       const result = await changeUser('invalid-id', {
-        name: 'newuser',
+        username: 'newuser',
         email: 'new@example.com',
         password: 'newpassword',
-        img: 'profile.jpg'
+        img: 'profile.jpg',
+        phone: '1234567890'
       });
 
       expect(result.success).toBe(false);
@@ -189,10 +206,11 @@ describe('User-related methods', () => {
       const nonExistentId = new mongoose.Types.ObjectId().toString();
 
       const result = await changeUser(nonExistentId, {
-        name: 'newuser',
+        username: 'newuser',
         email: 'new@example.com',
         password: 'newpassword',
-        img: 'profile.jpg'
+        img: 'profile.jpg',
+        phone: '1234567890'
       });
 
       expect(result.success).toBe(false);
@@ -204,14 +222,16 @@ describe('User-related methods', () => {
         username: 'testuser',
         email: 'test@example.com',
         password: 'validpassword',
-        isAdmin: false
+        isAdmin: false,
+        phone: '1234567890'
       });
 
       const result = await changeUser(user._id.toString(), {
-        name: 'newuser',
+        username: 'newuser',
         email: 'new@example.com',
         password: 'short',
-        img: 'profile.jpg'
+        img: 'profile.jpg',
+        phone: '0987654321'
       });
 
       expect(result.success).toBe(false);
@@ -223,7 +243,8 @@ describe('User-related methods', () => {
         username: 'testuser',
         email: 'test@example.com',
         password: 'validpassword',
-        isAdmin: false
+        isAdmin: false,
+        phone: '1234567890'
       });
 
       jest.spyOn(User, 'findByIdAndUpdate').mockImplementationOnce(() => {
@@ -231,10 +252,11 @@ describe('User-related methods', () => {
       });
 
       const result = await changeUser(user._id.toString(), {
-        name: 'newuser',
+        username: 'newuser',
         email: 'new@example.com',
         password: 'validpassword',
-        img: 'profile.jpg'
+        img: 'profile.jpg',
+        phone: '0987654321'
       });
 
       expect(result.success).toBe(false);

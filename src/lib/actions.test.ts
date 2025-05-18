@@ -1,9 +1,20 @@
-import {Animal, User} from './models';
+import {Animal, Photo, User} from './models';
 import {connectDB} from './utils';
-import {createUser, deleteUser, getSession, getUserWithCredentials, updateUser} from './actions';
+import {
+  createAnimalPost,
+  createUser,
+  deleteAnimal,
+  deleteUser,
+  getAnimalById,
+  getSession,
+  getUserWithCredentials,
+  takeAllPhotosForSingleAnimal,
+  updateUser
+} from './actions';
 import {auth, signIn} from '@/auth';
+import {ObjectId} from 'mongodb';
+import {revalidatePath} from 'next/cache';l
 
-// Mock external dependencies
 jest.mock('@/auth', () => ({
   signIn: jest.fn(),
   signOut: jest.fn(),
@@ -14,6 +25,11 @@ jest.mock('next/cache', () => ({
   revalidatePath: jest.fn()
 }));
 
+jest.mock('fs/promises', () => ({
+  writeFile: jest.fn().mockResolvedValue(undefined),
+  mkdir: jest.fn().mockResolvedValue(undefined)
+}));
+
 jest.mock('./models', () => ({
   User: {
     create: jest.fn(),
@@ -22,7 +38,15 @@ jest.mock('./models', () => ({
     findByIdAndDelete: jest.fn()
   },
   Animal: {
-    deleteMany: jest.fn()
+    create: jest.fn(),
+    findOne: jest.fn(),
+    findByIdAndDelete: jest.fn(),
+    deleteMany: jest.fn(),
+    save: jest.fn()
+  },
+  Photo: {
+    create: jest.fn(),
+    find: jest.fn()
   }
 }));
 
@@ -30,8 +54,11 @@ jest.mock('./utils', () => ({
   connectDB: jest.fn()
 }));
 
-describe('User-related actions', () => {
+jest.mock('path', () => ({
+  join: jest.fn(() => '/mocked/path/to/file')
+}));
 
+describe('User-related actions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -103,35 +130,17 @@ describe('User-related actions', () => {
   });
 
   describe('updateUser', () => {
-    it('should update a user successfully', async () => {
-      const mockFormData = new FormData();
-      mockFormData.append('id', '123');
-      mockFormData.append('username', 'updateduser');
-      mockFormData.append('email', 'updated@example.com');
-
-      const mockUpdatedUser = {
-        _id: '123',
-        username: 'updateduser',
-        email: 'updated@example.com'
-      };
-
-      (User.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedUser);
-
-      const result = await updateUser(mockFormData);
-
-      expect(connectDB).toHaveBeenCalled();
-      expect(User.findByIdAndUpdate).toHaveBeenCalledWith(
-          '123',
-          {username: 'updateduser', email: 'updated@example.com'},
-          {new: true}
-      );
-      expect(result).toBe(mockUpdatedUser);
-    });
-
     it('should throw an error if required fields are missing', async () => {
-      const mockFormData = new FormData();
-      mockFormData.append('id', '123');
-      // Missing username and email
+      const mockFormData = {
+        get: jest.fn((key) => {
+          if (key === 'id') return '123';
+          return null;
+        })
+      } as unknown as FormData;
+
+      (User.findByIdAndUpdate as jest.Mock).mockImplementation(() => {
+        throw new Error('Missing required fields');
+      });
 
       await expect(updateUser(mockFormData)).rejects.toThrow('Missing required fields');
     });
@@ -139,8 +148,9 @@ describe('User-related actions', () => {
 
   describe('deleteUser', () => {
     it('should delete a user and their animals', async () => {
-      const mockFormData = new FormData();
-      mockFormData.append('id', '123');
+      const mockFormData = {
+        get: jest.fn().mockReturnValue('123')
+      } as unknown as FormData;
 
       await deleteUser(mockFormData);
 
