@@ -13,7 +13,7 @@ import {
 } from './actions';
 import {auth, signIn} from '@/auth';
 import {ObjectId} from 'mongodb';
-import {revalidatePath} from 'next/cache';l
+import {revalidatePath} from 'next/cache';
 
 jest.mock('@/auth', () => ({
   signIn: jest.fn(),
