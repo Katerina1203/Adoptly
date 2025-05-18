@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import EditAnimalModal from "./EditAnimalModal";
 import { updateAnimal } from "@/lib/actions";
+import styles from "./editanimalbutton.module.css";
 
 interface EditAnimalButtonProps {
   animal: {
@@ -39,7 +40,7 @@ const EditAnimalButton: React.FC<EditAnimalButtonProps> = ({ animal }) => {
   return (
     <>
       <button
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className={styles.editButton}
         onClick={() => setIsModalOpen(true)}
       >
         Редактирай

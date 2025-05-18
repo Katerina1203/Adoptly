@@ -1,11 +1,11 @@
 .footer {
-  background-color: #f9f9fb; /* light background restored */
+  margin-top: auto; /* Add this line */
+  background-color: #f9f9fb;
   padding: 1rem 2rem;
   border-top: 1px solid #ddd;
   font-size: 0.75rem;
   color: #5c4d7d;
 }
-
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -24,7 +24,7 @@
 
 .container a:hover {
   color: #3a2a4d;
-}
+}a
 
 .container p {
   margin: 0;

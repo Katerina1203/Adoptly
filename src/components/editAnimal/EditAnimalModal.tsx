@@ -4,6 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import styles from "./editanimalmodal.module.css";
 
 const schema = z.object({
   description: z.string().min(10, "Минимум 10 символа"),
@@ -56,50 +57,40 @@ const EditAnimalModal = ({ isOpen, onClose, onSave, animal }: EditAnimalModalPro
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-6 rounded shadow-lg w-full max-w-md"
-      >
-        <h2 className="text-xl font-bold mb-4">Редактирай обявата</h2>
+    <div className={styles.modalOverlay}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.modalForm}>
+        <h2 className={styles.modalTitle}>Редактирай обявата</h2>
 
-        <div className="mb-4">
-          <label className="block mb-1">Възраст</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Възраст</label>
           <input
-            {...register("age" as const)}
-            className="w-full border p-2 rounded"
+            {...register("age")}
+            className={styles.formInput}
             inputMode="numeric"
           />
-          {errors.age && <p className="text-red-500 text-sm">{errors.age.message}</p>}
+          {errors.age && <p className={styles.formError}>{errors.age.message}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-1">Град</label>
-          <input {...register("city" as const)} className="w-full border p-2 rounded" />
-          {errors.city && <p className="text-red-500 text-sm">{errors.city.message}</p>}
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Град</label>
+          <input {...register("city")} className={styles.formInput} />
+          {errors.city && <p className={styles.formError}>{errors.city.message}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-1">Описание</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Описание</label>
           <textarea
-            {...register("description" as const)}
-            className="w-full border p-2 rounded h-24"
+            {...register("description")}
+            className={`${styles.formInput} ${styles.textArea}`}
           ></textarea>
-          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+          {errors.description && <p className={styles.formError}>{errors.description.message}</p>}
         </div>
 
-        <div className="flex justify-end gap-4 mt-4">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-          >
+        <div className={styles.modalActions}>
+          <button type="button" onClick={onClose} className={styles.btnCancel}>
             Отказ
           </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
+          <button type="submit" className={styles.btnSubmit}>
             Запази
           </button>
         </div>

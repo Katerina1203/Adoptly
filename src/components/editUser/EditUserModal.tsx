@@ -4,6 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import styles from "./editusermodal.module.css";
 
 const schema = z.object({
   username: z.string().min(3, "Минимум 3 символа"),
@@ -24,7 +25,7 @@ interface EditUserModalProps {
     username: string;
     email: string;
     phone?: string;
-    img?: undefined; // Ensure no File object gets passed
+    img?: undefined;
   };
 }
 
@@ -42,86 +43,52 @@ const EditUserModal = ({ isOpen, onClose, onSave, user }: EditUserModalProps) =>
     },
   });
 
-  
   const onSubmit = (data: FormData) => {
     const newData = {
       username: String(data.username),
       email: String(data.email),
       phone: String(data.phone),
-    }
+    };
     console.log("Submitted data:", newData);
     onSave(newData);
     onClose();
   };
-  
-  if (!isOpen) return <></>;
+
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-6 rounded shadow-lg w-full max-w-md"
-      >
-        <h2 className="text-xl font-bold mb-4">Редакция на потребител</h2>
+    <div className={styles.modalOverlay}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.modalForm}>
+        <h2 className={styles.modalTitle}>Редакция на потребител</h2>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Име</label>
-          <input
-            {...register("username")}
-            className="w-full px-3 py-2 border rounded"
-            placeholder="Име"
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
-          )}
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Име</label>
+          <input {...register("username")} className={styles.formInput} placeholder="Име" />
+          {errors.username && <p className={styles.formError}>{errors.username.message}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Имейл</label>
-          <input
-            {...register("email")}
-            className="w-full px-3 py-2 border rounded"
-            placeholder="email@example.com"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Имейл</label>
+          <input {...register("email")} className={styles.formInput} placeholder="email@example.com" />
+          {errors.email && <p className={styles.formError}>{errors.email.message}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Телефон</label>
-          <input
-            {...register("phone")}
-            className="w-full px-3 py-2 border rounded"
-            placeholder="+359..."
-          />
-          {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-          )}
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Телефон</label>
+          <input {...register("phone")} className={styles.formInput} placeholder="+359..." />
+          {errors.phone && <p className={styles.formError}>{errors.phone.message}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Снимка</label>
-          <input
-            type="file"
-            {...register("img")}
-            accept="image/*"
-            className="w-full"
-          />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Снимка</label>
+          <input type="file" {...register("img")} accept="image/*" className={styles.formInputFile} />
         </div>
 
-        <div className="flex justify-end gap-4 mt-4">
-          <button
-            type="button"
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-            onClick={onClose}
-          >
+        <div className={styles.modalActions}>
+          <button type="button" className={styles.btnCancel} onClick={onClose}>
             Отказ
           </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-[#5c4d7d] text-white rounded hover:bg-[#483e70]"
-          >
+          <button type="submit" className={styles.btnSubmit}>
             Запази
           </button>
         </div>
