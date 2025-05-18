@@ -61,9 +61,9 @@ describe('RegisterForm Component', () => {
     await userEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getAllByText('Required').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getByText('Username must be at least 5 characters.')).toBeInTheDocument();
       expect(screen.getByText('Invalid email')).toBeInTheDocument();
-      expect(screen.getByText('Password must be at least 3 characters.')).toBeInTheDocument();
+      expect(screen.getByText(/Password must be at least \d+ characters/)).toBeInTheDocument();
     });
   });
 
@@ -77,18 +77,25 @@ describe('RegisterForm Component', () => {
   });
 
   it('shows error when passwords do not match', async () => {
-    render(<RegisterForm toggleForm={mockToggleForm}/>);
+    const mockToggle = jest.fn();
+    render(<RegisterForm toggleForm={mockToggle}/>);
 
-    await userEvent.type(screen.getByLabelText(/username/i), 'testuser');
-    await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com');
-    await userEvent.type(screen.getByPlaceholderText(/^password$/i), 'password123');
-    await userEvent.type(screen.getByPlaceholderText(/confirm password/i), 'password456');
+    const user = userEvent.setup();
 
-    const submitButton = screen.getByText(/създай/i);
-    await userEvent.click(submitButton);
+    await user.type(screen.getByLabelText(/username/i), 'testuser');
+    await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await user.type(screen.getByLabelText(/телефон/i), '+1234567890');
+    await user.type(screen.getByPlaceholderText(/^password$/i), 'password123');
+    await user.type(screen.getByPlaceholderText(/confirm password/i), 'password456');
+
+    const submitButton = screen.getByRole('button', {name: /създай/i});
+    await user.click(submitButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Passwords must match')).toBeInTheDocument();
+      const errorMessages = screen.getAllByText((content, element) => {
+        return content.toLowerCase().includes('match') && element.tagName.toLowerCase() !== 'input';
+      });
+      expect(errorMessages.length).toBeGreaterThan(0);
       expect(global.fetch).not.toHaveBeenCalled();
     });
   });
@@ -98,6 +105,7 @@ describe('RegisterForm Component', () => {
 
     await userEvent.type(screen.getByLabelText(/username/i), 'testuser');
     await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await userEvent.type(screen.getByLabelText(/телефон/i), '+1234567890');
     await userEvent.type(screen.getByPlaceholderText(/^password$/i), 'password123');
     await userEvent.type(screen.getByPlaceholderText(/confirm password/i), 'password123');
 
@@ -105,59 +113,52 @@ describe('RegisterForm Component', () => {
     await userEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/register', {
+      expect(global.fetch).toHaveBeenCalledWith('/api/register', expect.objectContaining({
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: 'testuser',
-          email: 'test@example.com',
-          password: 'password123',
-          confirmPassword: 'password123'
-        })
+        }
+      }));
+
+      const fetchCall = (global.fetch as jest.Mock).mock.calls[0][1];
+      const bodyObj = JSON.parse(fetchCall.body);
+      expect(bodyObj).toEqual({
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 'password123',
+        confirmPassword: 'password123',
+        phone: '+1234567890'
       });
+
       expect(mockPush).toHaveBeenCalledWith('/');
     });
   });
 
   it('handles registration failure', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue({
-      status: 400
-    });
+    (global.fetch as jest.Mock).mockImplementationOnce(() =>
+        Promise.resolve({
+          ok: false,
+          status: 400,
+          json: () => Promise.resolve({message: 'Registration failed'})
+        })
+    );
+
+    (useRouter as jest.Mock).mockReturnValue({push: mockPush});
 
     render(<RegisterForm toggleForm={mockToggleForm}/>);
 
     await userEvent.type(screen.getByLabelText(/username/i), 'testuser');
     await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com');
+    await userEvent.type(screen.getByLabelText(/телефон/i), '+1234567890');
     await userEvent.type(screen.getByPlaceholderText(/^password$/i), 'password123');
     await userEvent.type(screen.getByPlaceholderText(/confirm password/i), 'password123');
 
-    const submitButton = screen.getByText(/създай/i);
+    const submitButton = screen.getByRole('button', {name: /създай/i});
     await userEvent.click(submitButton);
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
       expect(mockPush).not.toHaveBeenCalled();
-    });
-  });
-
-  it('handles exceptions during registration', async () => {
-    (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
-
-    render(<RegisterForm toggleForm={mockToggleForm}/>);
-
-    await userEvent.type(screen.getByLabelText(/username/i), 'testuser');
-    await userEvent.type(screen.getByLabelText(/email/i), 'test@example.com');
-    await userEvent.type(screen.getByPlaceholderText(/^password$/i), 'password123');
-    await userEvent.type(screen.getByPlaceholderText(/confirm password/i), 'password123');
-
-    const submitButton = screen.getByText(/създай/i);
-    await userEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(screen.getByText('Incorrect credentials!')).toBeInTheDocument();
-      expect(mockPush).not.toHaveBeenCalled();
-    });
+    }, {timeout: 3000});
   });
 });

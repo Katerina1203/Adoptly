@@ -17,6 +17,7 @@ test.describe('Authentication Flows', () => {
 
     await page.locator('input[name="username"], input[name="name"]').fill('Test User 2');
     await page.locator('input[type="email"]').fill(uniqueEmail);
+    await page.locator('input[type="tel"]').fill('0898111111');
     await page.locator('input[type="password"]').first().fill(USER_PASSWORD);
     await page.locator('input[type="password"]').nth(1).fill(USER_PASSWORD);
 
@@ -48,7 +49,7 @@ test.describe('Authentication Flows', () => {
     await page.getByRole('button', {name: 'Създайте акаунт'}).click();
     await page.getByRole('button', {name: 'Създай'}).click();
 
-    const errors = page.locator('text=/required|cannot be empty|missing/i');
+    const errors = page.locator('text=/required|missing|invalid|must/i');
     await expect(errors.first()).toBeVisible({timeout: 5000});
   });
 });
