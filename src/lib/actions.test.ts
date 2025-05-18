@@ -1,19 +1,7 @@
-import {Animal, Photo, User} from './models';
+import {Animal, User} from './models';
 import {connectDB} from './utils';
-import {
-  createAnimalPost,
-  createUser,
-  deleteAnimal,
-  deleteUser,
-  getAnimalById,
-  getSession,
-  getUserWithCredentials,
-  takeAllPhotosForSingleAnimal,
-  updateUser
-} from './actions';
+import {createUser, deleteUser, getSession, getUserWithCredentials, updateUser} from './actions';
 import {auth, signIn} from '@/auth';
-import {ObjectId} from 'mongodb';
-import {revalidatePath} from 'next/cache';
 
 jest.mock('@/auth', () => ({
   signIn: jest.fn(),
@@ -148,15 +136,15 @@ describe('User-related actions', () => {
 
   describe('deleteUser', () => {
     it('should delete a user and their animals', async () => {
-      const mockFormData = {
-        get: jest.fn().mockReturnValue('123')
-      } as unknown as FormData;
+      const userId = '123';
+      const mockFormData = new FormData();
+      mockFormData.append('id', userId);
 
       await deleteUser(mockFormData);
 
       expect(connectDB).toHaveBeenCalled();
-      expect(User.findByIdAndDelete).toHaveBeenCalledWith('123');
-      expect(Animal.deleteMany).toHaveBeenCalledWith({userID: '123'});
+      expect(User.findByIdAndDelete).toHaveBeenCalledWith(userId);
+      expect(Animal.deleteMany).toHaveBeenCalledWith({userID: userId});
     });
   });
 
