@@ -29,6 +29,7 @@ jobs:
         run: npm run test:e2e
         env:
           CI: true
+          AUTH_SECRET: testsecret
 
       - name: Upload Playwright test results
         if: always()
