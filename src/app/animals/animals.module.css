@@ -1,0 +1,26 @@
+.page {
+	padding: 3rem 1rem;
+	display: flex;
+	justify-content: center;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 2rem;
+	width: 100%;
+	max-width: 1280px;
+}
+
+.card {
+	background-color: white;
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+	overflow: hidden;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}

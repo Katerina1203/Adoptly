@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "CommonJS",
+    "outDir": "./dist/e2e",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true
+  },
+  "include": ["e2e/**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,17 @@
+.modalWrapper {
+    z-index: 50;
+  }
+  
+  .dialogContent {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 28rem;
+  }
+
+  :global(.dialog-content) {
+    background-color: white;
+  }
+  
